@@ -1,5 +1,4 @@
 # Audio
-af.resampler.quality=4
 ro.qc.sdk.audio.fluencetype=fluence
 persist.audio.fluence.voicecall=true
 persist.audio.fluence.voicerec=false
@@ -7,18 +6,15 @@ persist.audio.fluence.speaker=true
 tunnel.audio.encode=false
 av.offload.enable=true
 av.streaming.offload.enable=true
-audio.offload.buffer.size.kb=32
+audio.offload.buffer.size.kb=64
 audio.offload.gapless.enabled=true
-audio.offload.pcm.enable=true
-audio.offload.24bit.enable=1
-qcom.hw.aac.encoder=false
-media.aaccodectype=1
-media.swhevccodectype=1
+audio.offload.pcm.16bit.enable=false
+audio.offload.pcm.24bit.enable=true
 use.voice.path.for.pcm.voip=true
 vidc.enc.narrow.searchrange=1
 
 # Media
-mm.enable.qcom_parser=3315299
+mm.enable.qcom_parser=3179041
 mm.enable.smoothstreaming=true
 mm.disable.sec_smoothstreaming=true
 media.aac_51_output_enabled=true
@@ -39,7 +35,7 @@ debug.mdpcomp.idletime=600
 persist.hwc.mdpcomp.enable=true
 persist.hwc.ptor.enable=true
 ro.opengles.version=196608
-ro.qualcomm.cabl=0
+debug.enable.sglscale=1
 ro.sf.lcd_density=320
 
 # GPS
@@ -60,8 +56,10 @@ persist.rild.nitz_short_ons_2=
 persist.rild.nitz_short_ons_3=
 
 # Radio
-persist.radio.multisim.config=dsds
+persist.data.target=dpm1
 persist.radio.apm_sim_not_pwdn=1
+persist.radio.multisim.config=dsds
+persist.radio.no_cons_man_roam=1
 rild.libargs=-d /dev/smd0
 rild.libpath=/system/vendor/lib/libril-qc-qmi-1.so
 ril.ecclist=112,911,999,110,122,119,120,000,08,118

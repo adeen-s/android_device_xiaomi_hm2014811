@@ -160,6 +160,8 @@ on post-fs-data
     #Create a folder for SRS to be able to create a usercfg file
     mkdir /data/data/media 0770 media media
 
+    mkdir /data/diag_logs 0777 system system 5
+
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
@@ -296,9 +298,8 @@ on boot
     chown system system /sys/class/leds/red/blink
     chmod 0660 /sys/class/leds/red/blink
 
-    # Torch
-    chown system camera /sys/class/leds/torch-light/brightness
-    chmod 0660 /sys/class/leds/torch-light/brightness
+    # camera sockets
+    mkdir /data/misc/camera 0770 camera camera
 
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
@@ -330,6 +331,7 @@ service rfs_access /system/bin/rfs_access
 service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     class core
     user root
+    seclabel u:r:bluetooth_loader:s0
     oneshot
 
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
@@ -337,6 +339,7 @@ service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
     user bluetooth
     group bluetooth net_bt_admin
     disabled
+    seclabel u:r:bluetooth_loader:s0
     oneshot
 
 on property:bluetooth.hciattach=true
@@ -472,10 +475,10 @@ on property:ro.data.large_tcp_window_size=true
     # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
     write /proc/sys/net/ipv4/tcp_adv_win_scale  2
 
-service ril-daemon1 /system/bin/rild -c 1
+service ril-daemon1 /system/bin/rild -c 2
     class main
-    socket rild1 stream 660 root radio
-    socket rild-debug1 stream 660 radio system
+    socket rild2 stream 660 root radio
+    socket rild-debug2 stream 660 radio system
     user root
     group radio cache inet misc audio sdcard_r sdcard_rw diag qcom_diag log
 
@@ -493,6 +496,7 @@ service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw
 service charger /charger
     class charger
     group log
+    seclabel u:r:healthd:s0
 
 service ssr_diag /system/bin/ssr_diag
     class late_start
@@ -522,21 +526,6 @@ on property:persist.usb.chgdisabled=1
 
 on property:persist.usb.chgdisabled=0
     write /sys/class/power_supply/battery/charging_enabled 1
-
-service qrngd /system/bin/qrngd -f
-   class main
-   user root
-   group root
-
-service qrngp /system/bin/qrngp -f
-   class main
-   user root
-   group root
-   oneshot
-   disabled
-
-on property:sys.boot_completed=1
-   start qrngp
 
 service qseecomd /system/bin/qseecomd
    class core
@@ -581,9 +570,3 @@ service wcnss-service /system/bin/wcnss_service
     class main
     user system
     group system wifi radio
-
-service setup_fs /system/bin/setup_fs /dev/block/platform/7824900.sdhci/by-name/userdata
-    class core
-    user root
-    group root
-    oneshot
