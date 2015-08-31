@@ -90,11 +90,6 @@ PRODUCT_PACKAGES += \
     com.dsi.ant.antradio_library \
     libantradio
 
-# Camera
-PRODUCT_PACKAGES += \
-    camera.msm8916 \
-    libmm-qcamera
-
 # Charger
 PRODUCT_PACKAGES += \
     charger \
