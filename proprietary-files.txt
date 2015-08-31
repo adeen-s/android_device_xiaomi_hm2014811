@@ -224,10 +224,7 @@ vendor/lib/libsystem_health_mon.so
 vendor/lib/libxml.so
 
 # Sensors
-lib/hw/sensors.msm8916.so
-vendor/etc/calmodule.cfg
 vendor/lib/libcalmodule_akm.so
-vendor/lib/libcalmodule_yamaha.so
 
 # Thermal
 bin/thermal-engine
